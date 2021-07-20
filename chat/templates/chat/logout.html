@@ -1,0 +1,13 @@
+{% extends 'chat/base.html' %}
+
+{% block title%} Log out {% endblock %}
+
+{% block content%}
+<div style="background:#FFFFFF;">
+    <form action="/" method="post">
+    {% csrf_token %}
+    <p>Do you want to logout.</p>
+    <button type="submit">Log Out</button>
+    </form>
+</div>
+{% endblock %}

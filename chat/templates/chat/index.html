@@ -1,5 +1,5 @@
 {% extends 'chat/base.html' %}
-
+{% load static %}
 {% block title%} Home {% endblock %}
     
 
@@ -8,8 +8,9 @@
 
         <div class='friend-list'>
             <div class="friends-area">
+                {% for friend in friends %}
                 
-                <div class="friend">
+                <div class="friend" id="friend-{{ friend.id }}">
                     <div class="image">
                         <div class="i">
                         
@@ -17,11 +18,12 @@
                     </div>
 
                     <div class="friend-info">
-                        <div class="name"> Alexander </div>
-                        <div class="status">online </div>
+                        <div class="name"> {{ friend.username }} </div>
+                        <div class="status"></div>
                     </div>
                 </div>
         
+                {% endfor %}
             </div>
         
         </div>
@@ -30,25 +32,18 @@
             <div class="chat">
 
                 <div class="message-area">
-                    
-                    <div class="message left ">
-                        <div class="orient">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum, placeat.
-                        </div>
-                    </div>
-                    <div class="message right ">
-                        <div class="orient">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum, placeat.
-                    </div>
+             
                 </div>
 
-            </div>
-
             <div class ="input-area">
-                <input type="text"/>
-                <button>Send</button>
+                <input id="msg-text-input" type="text"/>
+                <button id="send-btn">Send</button>
             </div>
         </div>
     </div>
 
 {% endblock  %}    
+
+{%block scripts%}
+<script src="{% static 'chat/js/index.js' %}"></script>
+{% endblock %}

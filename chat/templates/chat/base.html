@@ -10,6 +10,7 @@
 </head>
 <body>
 
+    
     <div class="app">
         {% include 'chat/header.html' %}
 
@@ -18,5 +19,7 @@
       
        {% include 'chat/footer.html' %}
     </div>
+    {{ request.user.id|json_script:"logedInUserId" }}
+    {% block scripts%}{% endblock%}
 </body>
 </html>
