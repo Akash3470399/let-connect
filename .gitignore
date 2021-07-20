@@ -7,8 +7,9 @@ __pycache__/
 *.so
 
 
+
 #local files
-/templates
+/.vscode
 # Distribution / packaging
 .Python
 build/
