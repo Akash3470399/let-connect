@@ -1,13 +1,56 @@
 {% extends 'chat/base.html' %}
+{% load static %}
+{% block title%} Sign Up {% endblock %} 
 
-{% block title%} Sign Up {% endblock %}
-
+{% block extraStyle%}
+  <link rel="stylesheet" href="{% static 'chat/css/account.css' %}">
+{% endblock %}
 {% block content%}
-<div style="background:#FFFFFF;">
-    <form action="" method="post">
+
+  <div class="content">
+    <div class="form">
+      <form action="" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-    </form>
-</div>
+        <div class="sign_in">
+          <h2>Sign Up</h2>
+        </div>
+
+        <div class="inputArea">
+        {% for error in form_errors %}
+          <h3 style="color:#AA0000"> {{ error }} </h3> 
+        {% endfor %}
+        </div>
+
+        <div class="inputArea">
+          <h3>Username</h3>
+          {{ form.username }}
+        </div>
+
+        <div class="inputArea">
+          <h3>Email</h3>
+          {{ form.email }}
+        </div>
+
+        <div class="inputArea">
+          <h3>Password</h3>
+          {{ form.password1 }}
+        </div>
+
+        <div class="inputArea">
+          <h3>Confirm Password</h3>
+          {{ form.password2 }}
+        </div>
+
+        <div class="submitArea submit1 inputArea">
+          <input type="submit" value="Sign Up" name="" id="" class="sub" />
+        </div>
+      </form>
+
+      <div class="inputArea1">
+        <p>
+        Already have an account? <a onclick="" href="{% url 'chat:login' %}">Sign In</a>
+        </p>
+      </div>
+    </div>
+  </div>
 {% endblock %}

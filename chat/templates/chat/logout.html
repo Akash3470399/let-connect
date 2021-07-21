@@ -1,13 +1,25 @@
 {% extends 'chat/base.html' %}
+{% load static %}
+{% block title%} logout {% endblock %} 
 
-{% block title%} Log out {% endblock %}
-
+{% block extraStyle%}
+  <link rel="stylesheet" href="{% static 'chat/css/account.css' %}">
+{% endblock %}
 {% block content%}
-<div style="background:#FFFFFF;">
-    <form action="/" method="post">
-    {% csrf_token %}
-    <p>Do you want to logout.</p>
-    <button type="submit">Log Out</button>
-    </form>
-</div>
+
+  <div class="content">
+    <div class="form">
+      <form action="{% url 'chat:login' %}" method="post">
+        {% csrf_token %}
+        <div class="inputArea1">
+            <p>
+                Do you want to Log Out 
+            </p>
+        </div>
+        <div class="submitArea submit1">
+          <input type="submit" value="Yes" name="" id="" class="sub" />
+        </div>
+      </form>
+    </div>
+  </div>
 {% endblock %}

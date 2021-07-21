@@ -3,8 +3,9 @@
         <div class="logo">
             Let-Connect
         </div>
+        {% if user.is_authenticated %}
             <span style="color:#FFFFFF;">{{ request.user }}</span>
-
+        {% endif %}
         <div class='menu' >
             <span></span>
             <span></span>
