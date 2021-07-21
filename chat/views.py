@@ -10,7 +10,7 @@ import json
 from .forms import RegisterForm
 from .models import Message, Profile
 
-
+@login_required(login_url='chat:login')
 def index(request):
     try:
         friends = Profile.objects.get(user_id = request.user.id ).friends.all()

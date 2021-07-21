@@ -1,5 +1,6 @@
 //globel variables
 let hostname_ = "127.0.0.1:8000";
+
 let LogInUserId = JSON.parse(
   document.querySelector("#logedInUserId").textContent
 );
@@ -37,16 +38,14 @@ function loadChat() {
                                     </div>
                                 </div>`;
         chatBox.innerHTML += msgDiv;
-
       });
 
       try {
         //for auto scrolling
         offsetTop = chatBox.lastChild.offsetTop;
         chatBox.scrollTo(0, offsetTop);
-        
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
       startMessaging(friend);
     });
@@ -58,27 +57,36 @@ function startMessaging(friendId) {
   let msgInput = document.querySelector("#msg-text-input");
   let sendBtn = document.querySelector("#send-btn");
 
-  
   let websocket = new WebSocket(
     "ws://" + hostname_ + "/chat/" + groupId.toString() + "/"
   );
 
-  sendBtn.onclick = function (e){
-    let msg = {
-      'text':msgInput.value,
-      'sender':LogInUserId,
-      'receiver':friendId,
+  msgInput.focus();
+  msgInput.onkeyup = function (e){
+    if(e.keyCode === 13){
+      sendBtn.click();
     }
-    
+  }
+
+  sendBtn.onclick = function (e) {
+    let msg = {
+      text: msgInput.value,
+      sender: LogInUserId,
+      receiver: friendId,
+    };
+
     websocket.send(JSON.stringify(msg));
     msgInput.value = "";
   };
 
-  websocket.onmessage = function (e){
+  websocket.onmessage = function (e) {
     let chatBox = document.querySelector(".message-area");
     let msg = JSON.parse(e.data);
-    if (msg.sender == friendId) floatProp = "left";
-    else floatProp = "right";
+    if (msg.sender == friendId) 
+      floatProp = "left";
+    else 
+      floatProp = "right";
+    
     let msgDiv = `<div class="message ${floatProp} ">
                                 <div class="orient">
                                 ${msg["text"]}
@@ -90,9 +98,6 @@ function startMessaging(friendId) {
     offsetTop = chatBox.lastChild.offsetTop;
     chatBox.scrollTo(0, offsetTop);
   };
-
-
-
 }
 
 //function to create unique group id
