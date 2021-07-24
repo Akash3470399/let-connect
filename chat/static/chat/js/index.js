@@ -1,5 +1,6 @@
 //globel variables
 let hostname_ = "127.0.0.1:8000";
+let protocol_ = window.location.protocol
 
 let LogInUserId = JSON.parse(
   document.querySelector("#logedInUserId").textContent
@@ -23,7 +24,7 @@ function loadChat() {
   document.getElementById(this.id).className += " activeFriend";
   let friend = this.id.replace("friend-", "");
 
-  fetch("http://" + hostname_ + `/get-messages/${friend}`, {
+  fetch(protocol_ + hostname_ + `/get-messages/${friend}`, {
     headers: {
       Accept: "application/json",
       "X-Requested-With": "XMLHTTPRequest",
@@ -129,7 +130,7 @@ function searchFriends(){
   let userList = document.createElement("datalist")
   userList.id = "users-list";
 
-  fetch("http://"+hostname_ + "/get-users/", {
+  fetch(protocol_ +hostname_ + "/get-users/", {
   headers :{
     Accept:"application/json",
     "X-Requested-With" : "XMLHTTPRequest",
@@ -160,7 +161,7 @@ function addFriend(e){
   e.preventDefault();
   let form = new FormData(this);
 
-  fetch("http://"+ hostname_ + "/add-friend/", {
+  fetch(protocol_ + hostname_ + "/add-friend/", {
   method: 'POST',
   credentials: 'same-origin',
   headers: {
