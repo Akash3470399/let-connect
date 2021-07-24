@@ -191,6 +191,4 @@ function addFriend(e){
     `
   })
 
-
-  // fetch("http:/"+ hostname_ + "add-friend")
 }
