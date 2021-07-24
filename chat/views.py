@@ -1,18 +1,20 @@
+import json
+from django.core.checks import messages
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import CreateView
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.conf import settings
 
-from .forms import RegisterForm
-from .models import Message, Profile
+from .forms import RegisterForm, SignInForm
+from .models import Message, CustomUser
 
 @login_required(login_url='chat:login')
 def index(request):
     try:
-        friends = Profile.objects.get(user_id = request.user.id ).friends.all()
+        friends = request.user.friends.all()
     except:
         friends=None
     context = {'friends':friends}
@@ -20,13 +22,36 @@ def index(request):
 
 @login_required(login_url='chat:login')
 def getMessages(request,pk):
-    user = Profile.objects.get(user_id = request.user.id)
-    messages = user.getMessages(pk)
+    messages = Message.getMessages(request.user.id, pk)
     return JsonResponse(messages, safe=False)
+
+@login_required(login_url='chat:login')
+def getUsersList(request):
+    try:
+        users = CustomUser.objects.all()
+        usersList = []
+        for user in users:
+            if user == request.user or (user in request.user.friends.all()):
+                continue
+            u = {
+                'username':user.name,
+                'email':user.email,
+            }
+            usersList.append(u)
+    except:
+        usersList = None
+    
+    return JsonResponse(usersList, safe=False)
+
+@login_required(login_url="chat:login")
+def add_friend(request):
+    user_email = json.load(request)['name']
+    request.user.friends.add(CustomUser.objects.get(email = user_email))
+    return JsonResponse({'status':200})
 
 class RegisterView(CreateView):
     template_name = 'chat/signup.html'
-    model = User
+    model = settings.AUTH_USER_MODEL
     form_class = RegisterForm
     success_url ='/'
 
@@ -44,6 +69,8 @@ class RegisterView(CreateView):
     
 class CustomLoginView(UserPassesTestMixin,LoginView):
     template_name='chat/login.html'
+    # form_class = SignInForm
+    # authentication_form = SignInForm
 
     def get_context_data(self, **kwargs) :
         context = super().get_context_data(**kwargs)

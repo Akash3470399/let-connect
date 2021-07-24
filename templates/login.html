@@ -160,86 +160,18 @@
 </head>
 <body>
  
-
-    <div class="content">
-        <div class="form">
-            
-            
-            <div class="sign_in">
-                <h2>Sign in</h2>
+            <div class="searchBox">
+                <input type="text" placeholder="find new friends..." list="UsersList">
+                    <datalist id="UsersList">
+                    <option value="ab@gmil">shan</option>
+                    <option value="sunil">sunil</option>
+                    <option value="sunil">sushil</option>
+                    <option value="sunil">jay</option>
+                    <option value="sunil">pandit</option>
+        </datalist>
+                <button id="" type="button">Search</button>
             </div>
 
-            <div class="inputArea">
-                <h3>Username</h3>
-                <input type="text" name="" id="">
-            </div>
 
-            <div class="inputArea">
-                <h3>Password</h3>
-                <input type="password" name="" id="">
-            </div>
-        
-            <div class="remember">
-                <label><input type="checkbox" name="" id="">Remember me</label>
-            </div>
-
-            <div class="submitArea submit1">
-                <input type="submit" value="Sign In" name="" id="" class="sub">
-            </div>
-            
-            <div class="inputArea1 ">
-                <p>Dont have an account? <a onclick="signup()" href="#">Sign up</a></p>
-            
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-
-<script>
-    const hid = document.querySelector('.hidden');
-       const inputArea = document.querySelector('.inputArea1');
-       const inputArea2 = document.querySelector('.inputArea2');
-       const signUp = document.querySelector('.sub');
-       const sUp = document.querySelector('.sign_up');
-       const sIn = document.querySelector('.sign_in');
-       const submit1 = document.querySelector('.submit1');
-       const submit2 = document.querySelector('.submit2');
-
-       submit2.classList.add('hide');
-       
-
-
-  
-  
-    function signup(){
-
-       hid.classList.add('inactive');
-       inputArea.classList.add('hide');
-       inputArea2.classList.add('show');
-       sUp.classList.add('show');
-       sIn.classList.add('hide');
-       submit1.classList.add('hide');
-       submit2.classList.remove('hide');
-   } 
-
-   function signin(){
-       hid.classList.remove('inactive');
-       inputArea.classList.remove('hide');
-       inputArea2.classList.remove('show');
-       sUp.classList.remove('show');
-       sIn.classList.remove('hide');
-       submit2.classList.add('hide');
-       submit1.classList.remove('hide');
-
-
-       
-   }
-  
-   
-</script>
 </body>
 </html>

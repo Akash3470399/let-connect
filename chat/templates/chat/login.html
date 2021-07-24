@@ -10,6 +10,7 @@
   <div class="content">
     <div class="form">
       <form action="" method="post">
+
         {% csrf_token %}
         <div class="sign_in">
           <h2>Sign in</h2>
@@ -21,7 +22,7 @@
         </div>
 
         <div class="inputArea">
-          <h3>Username</h3>
+          <h3>Email</h3>
           {{ form.username }}
         </div>
         <div class="inputArea">

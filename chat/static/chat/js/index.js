@@ -16,7 +16,7 @@ Array.from(friendsDiv).forEach((div) => {
 function loadChat() {
   let friend = this.id.replace("friend-", "");
 
-  fetch("http://" + hostname_ + `/getMessages/${friend}`, {
+  fetch("http://" + hostname_ + `/get-messages/${friend}`, {
     headers: {
       Accept: "application/json",
       "X-Requested-With": "XMLHTTPRequest",
@@ -28,6 +28,7 @@ function loadChat() {
     .then((data) => {
       let chatBox = document.querySelector(".message-area");
       chatBox.innerHTML = "";
+
       data.forEach((msg) => {
         let floatProp = null;
         if (msg.sender == friend) floatProp = "left";
@@ -107,4 +108,68 @@ function createGroupId(a, b) {
     (Math.max(parseInt(a), parseInt(b)) + 1);
   groupId = groupId / 2 + Math.min(parseInt(a), parseInt(b));
   return groupId;
+}
+
+//function to add search functionality
+function searchFriends(){
+  let searchBox = document.querySelector("div.searchBox");
+  let searchform = searchBox.firstElementChild;
+  let searchBoxInput = searchform.querySelectorAll('input')[1];
+  searchBoxInput.setAttribute('list', 'users-list') 
+
+  searchform.addEventListener('submit', addFriend);
+
+  let userList = document.createElement("datalist")
+  userList.id = "users-list";
+
+  fetch("http://"+hostname_ + "/get-users/", {
+  headers :{
+    Accept:"application/json",
+    "X-Requested-With" : "XMLHTTPRequest",
+  }
+  })
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+
+    try {
+      data.forEach((user) => {
+        let newOption = document.createElement('option');
+        newOption.value = user['email'];
+        newOption.innerText = user['username'];     
+        userList.appendChild(newOption); 
+      });
+      searchBox.appendChild(userList);
+    } catch (error) {
+      console.log(error)
+    }
+  });
+}
+
+searchFriends();
+
+function addFriend(e){
+  e.preventDefault();
+  let form = new FormData(this);
+
+  fetch("http://"+ hostname_ + "/add-friend/", {
+  method: 'POST',
+  credentials: 'same-origin',
+  headers: {
+      'Accept':'application/json',
+      'X-Requested-With': 'XMLHTTPRequest',
+      'X-CSRFToken':form.get('csrfmiddlewaretoken').toString(),
+    },
+    body:JSON.stringify({ 'name':form.get('user-name').toString()}),
+  })
+  .then( response => {
+    return response.json();
+  })
+  .then(data => {
+    console.log(data);
+  })
+
+
+  // fetch("http:/"+ hostname_ + "add-friend")
 }
