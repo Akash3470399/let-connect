@@ -46,8 +46,13 @@ def getUsersList(request):
 @login_required(login_url="chat:login")
 def add_friend(request):
     user_email = json.load(request)['name']
-    request.user.friends.add(CustomUser.objects.get(email = user_email))
-    return JsonResponse({'status':200})
+    try:
+        request.user.friends.add(CustomUser.objects.get(email = user_email))
+        friend = request.user.friends.get(email = user_email)
+        data = {'id':friend.id, 'name':friend.name}
+    except:
+        data = None
+    return JsonResponse(data, safe=False)
 
 class RegisterView(CreateView):
     template_name = 'chat/signup.html'

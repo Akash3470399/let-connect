@@ -397,3 +397,6 @@
   
   /* ------------------------------------- */
 
+.activeFriend{
+  background-image: linear-gradient(to left,rgb(83, 141, 117),rgb(190, 155, 0));
+}

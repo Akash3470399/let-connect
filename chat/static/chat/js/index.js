@@ -14,6 +14,13 @@ Array.from(friendsDiv).forEach((div) => {
 
 //function to load previous messages
 function loadChat() {
+  try {
+    document.querySelector(".activeFriend").className = "friend";
+  } catch (error) {
+    null;
+  }
+  
+  document.getElementById(this.id).className += " activeFriend";
   let friend = this.id.replace("friend-", "");
 
   fetch("http://" + hostname_ + `/get-messages/${friend}`, {
@@ -167,7 +174,21 @@ function addFriend(e){
     return response.json();
   })
   .then(data => {
-    console.log(data);
+    let friendsArea = document.querySelector("div.friends-area");
+    friendsArea.innerHTML += `
+    <div class="friend" id="friend-${data['id']}">
+    <div class="image">
+        <div class="i">
+        
+        </div>
+    </div>
+
+    <div class="friend-info">
+        <div class="name"> ${data['name']} </div>
+        <div class="status"></div>
+    </div>
+</div>
+    `
   })
 
 
