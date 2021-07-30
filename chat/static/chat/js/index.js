@@ -1,6 +1,7 @@
 //globel variables
 let hostname_ = window.location.host;
-let protocol_ = window.location.protocol+ "//";
+let protocol_ = window.location.protocol + "//";
+let websocket = null;
 
 let LogInUserId = JSON.parse(
   document.querySelector("#logedInUserId").textContent
@@ -17,13 +18,19 @@ Array.from(friendsDiv).forEach((div) => {
 function loadChat() {
   try {
     document.querySelector(".activeFriend").className = "friend";
+    
   } catch (error) {
     null;
   }
-  
+  try {
+    websocket.close()
+  } catch (error) {
+    null;
+  }
+
   document.getElementById(this.id).className += " activeFriend";
   let friend = this.id.replace("friend-", "");
-  let url = protocol_ + hostname_ + `/get-messages/${friend}`
+  let url = protocol_ + hostname_ + `/get-messages/${friend}`;
   fetch(url, {
     headers: {
       Accept: "application/json",
@@ -66,16 +73,16 @@ function startMessaging(friendId) {
   let msgInput = document.querySelector("#msg-text-input");
   let sendBtn = document.querySelector("#send-btn");
 
-  let websocket = new WebSocket(
+  websocket = new WebSocket(
     "ws://" + hostname_ + "/chat/" + groupId.toString() + "/"
   );
 
   msgInput.focus();
-  msgInput.onkeyup = function (e){
-    if(e.keyCode === 13){
+  msgInput.onkeyup = function (e) {
+    if (e.keyCode === 13) {
       sendBtn.click();
     }
-  }
+  };
 
   sendBtn.onclick = function (e) {
     let msg = {
@@ -91,11 +98,9 @@ function startMessaging(friendId) {
   websocket.onmessage = function (e) {
     let chatBox = document.querySelector(".message-area");
     let msg = JSON.parse(e.data);
-    if (msg.sender == friendId) 
-      floatProp = "left";
-    else 
-      floatProp = "right";
-    
+    if (msg.sender == friendId) floatProp = "left";
+    else floatProp = "right";
+
     let msgDiv = `<div class="message ${floatProp} ">
                                 <div class="orient">
                                 ${msg["text"]}
@@ -119,77 +124,86 @@ function createGroupId(a, b) {
 }
 
 //function to add search functionality
-function searchFriends(){
+function searchFriends() {
   let searchBox = document.querySelector("div.searchBox");
   let searchform = searchBox.firstElementChild;
-  let searchBoxInput = searchform.querySelectorAll('input')[1];
-  searchBoxInput.setAttribute('list', 'users-list') 
+  let searchBoxInput = searchform.querySelectorAll("input")[1];
+  searchBoxInput.setAttribute("list", "users-list");
 
-  searchform.addEventListener('submit', addFriend);
+  searchform.addEventListener("submit", addFriend);
 
-  let userList = document.createElement("datalist")
+  let userList = document.createElement("datalist");
   userList.id = "users-list";
-  let url = protocol_ + hostname_ + "/get-users/"
+  let url = protocol_ + hostname_ + "/get-users/";
   fetch(url, {
-  headers :{
-    Accept:"application/json",
-    "X-Requested-With" : "XMLHTTPRequest",
-  }
+    headers: {
+      Accept: "application/json",
+      "X-Requested-With": "XMLHTTPRequest",
+    },
   })
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-
-    try {
-      data.forEach((user) => {
-        let newOption = document.createElement('option');
-        newOption.value = user['email'];
-        newOption.innerText = user['username'];     
-        userList.appendChild(newOption); 
-      });
-      searchBox.appendChild(userList);
-    } catch (error) {
-      console.log(error)
-    }
-  });
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      try {
+        data.forEach((user) => {
+          let newOption = document.createElement("option");
+          newOption.value = user["email"];
+          newOption.innerText = user["username"];
+          userList.appendChild(newOption);
+        });
+        searchBox.appendChild(userList);
+      } catch (error) {
+        console.log(error);
+      }
+    });
 }
 
 searchFriends();
 
-function addFriend(e){
+function addFriend(e) {
+  console.log(e, this)
   e.preventDefault();
   let form = new FormData(this);
-  let url = protocol_ + hostname_ + "/add-friend/"
+  let url = protocol_ + hostname_ + "/add-friend/";
   fetch(url, {
-  method: 'POST',
-  credentials: 'same-origin',
-  headers: {
-      'Accept':'application/json',
-      'X-Requested-With': 'XMLHTTPRequest',
-      'X-CSRFToken':form.get('csrfmiddlewaretoken').toString(),
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+      "X-Requested-With": "XMLHTTPRequest",
+      "X-CSRFToken": form.get("csrfmiddlewaretoken").toString(),
     },
-    body:JSON.stringify({ 'name':form.get('user-name').toString()}),
+    body: JSON.stringify({ name: form.get("user-name").toString() }),
   })
-  .then( response => {
-    return response.json();
-  })
-  .then(data => {
-    let friendsArea = document.querySelector("div.friends-area");
-    friendsArea.innerHTML += `
-    <div class="friend" id="friend-${data['id']}">
-    <div class="image">
-        <div class="i">
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      if (data != null){
         
-        </div>
-    </div>
+        let friendsArea = document.querySelector("div.friends-area");
+        friendsArea.innerHTML += `
+      <div class="friend" id="friend-${data["id"]}">
+      <div class="image">
+          <div class="i">
+          
+          </div>
+      </div>
+  
+      <div class="friend-info">
+          <div class="name"> ${data["name"]} </div>
+          <div class="status"></div>
+      </div>
+  </div>
+      `;
+      document.querySelector("#friendSearchInput").value = "";
 
-    <div class="friend-info">
-        <div class="name"> ${data['name']} </div>
-        <div class="status"></div>
-    </div>
-</div>
-    `
-  })
+    }
+    else{
+        alert("you are already friends & connected on let-connected.");
+      document.querySelector("#friendSearchInput").value = "";
 
+      }
+    });
 }

@@ -47,9 +47,12 @@ def getUsersList(request):
 def add_friend(request):
     user_email = json.load(request)['name']
     try:
-        request.user.friends.add(CustomUser.objects.get(email = user_email))
-        friend = request.user.friends.get(email = user_email)
-        data = {'id':friend.id, 'name':friend.name}
+        if user_email == request.user.email or (request.user.friends.filter(email=user_email)):
+            data = None
+        else:
+            request.user.friends.add(CustomUser.objects.get(email = user_email))
+            friend = request.user.friends.get(email = user_email)
+            data = {'id':friend.id, 'name':friend.name}
     except:
         data = None
     return JsonResponse(data, safe=False)
