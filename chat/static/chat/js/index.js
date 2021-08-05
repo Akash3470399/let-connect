@@ -111,6 +111,8 @@ function startMessaging(friendId) {
     //for auto scrolling
     offsetTop = chatBox.lastChild.offsetTop;
     chatBox.scrollTo(0, offsetTop);
+
+    document.querySelector("#msg-ring").play();
   };
 }
 

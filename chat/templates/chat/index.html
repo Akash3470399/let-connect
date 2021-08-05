@@ -39,6 +39,10 @@
                 <input id="msg-text-input" type="text"/>
                 <button id="send-btn">Send</button>
             </div>
+
+            <audio controls id="msg-ring" hidden>
+                <source src="{% static 'chat/audio/msg.mp3' %}" type="audio/mpeg">
+            </audio>
         </div>
     </div>
 
